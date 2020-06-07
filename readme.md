@@ -119,6 +119,7 @@ def model_training(train_images, train_labels, iterations):
     model = get_model()
     training_hist = [model.fit(x_train, y_train, validation_data=(x_val, y_val),
                                epochs=number_of_epochs, verbose=0)]
+                               
     score = model.evaluate(x_val, y_val, verbose=1)
     histories.append((score[0], score[1] * 100))
 
@@ -133,7 +134,8 @@ def model_training(train_images, train_labels, iterations):
 
         model = get_model()
         training_hist.append(model.fit(x_train, y_train, validation_data=(x_val, y_val),
-                                       epochs=10, verbose=0))               
+                                       epochs=10, verbose=0))      
+
         score = model.evaluate(x_val, y_val, verbose=0)
         histories.append((score[0], score[1] * 100))
 
