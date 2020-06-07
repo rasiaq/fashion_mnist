@@ -110,7 +110,7 @@ def model_training(train_images, train_labels, iterations):
     return best_model, training_hist[index]
 
 
-def print_plots(training_hist):
+def show_plots(training_hist):
     """
     :param training_hist: training history of best model
     :return:
@@ -162,7 +162,7 @@ def main():
     _, training_history = model_training(train_img, train_labels, number_of_iterations)
 
     # Printing plots
-    print_plots(training_history)
+    show_plots(training_history)
 
     # Run final test
     load_best_model(test_img, test_labels)
