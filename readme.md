@@ -145,31 +145,37 @@ saved to a file with format `.h5`.
 As I mentioned earlier, first version of CNN didn't perform very well. Here is
 the plot, produced by training history:
 
-![plot1](https://ibb.co/wdqs83S =250x250)
+![plot1](images/first_model.png)
 
 After adding some dropout layers and changing number of filters, I was able to
 partly remove overfitting and improve overall performance
 
+![plot2](images/second_model.png)
 
 Results of training are contained in table below
 
 |          | First version | Model 1 | Model 2 | Model 3 | Model 4 |
 | -------- | ------------- | ------- | ------- | ------- | ------- |
-|   Loss   | 0.64          |         |         |         |         |
-| Accuracy | 91%           |         |         |         |         |
+|   Loss   | 0.64          | 0.23    | 0.27    | 0.26    | 0.28    |
+| Accuracy | 91%           | 92.1%   | 90.2%   | 90.4%   | 89.4%   |
 
 Best model
 
 |          |  Best model   |
 | -------- | ------------- |
-|   Loss   | T-shirt/top   |
-| Accuracy | Trouser       |
+|   Loss   | 0.23          |
+| Accuracy | 92.1%         |
+
+Evaluating model on test data:
+`Final scores:
+Loss: 0.24972761380672454
+Accuracy: 91.32999777793884`
 
 Compared to other, similar models
 
 |          |  Best model   | 2 Conv + pooling | 2 Conv + preprocessing | 2 Conv + 2 FC + preprocessing |   
 | -------- | ------------- | ---------------- | ---------------------- | ----------------------------- |
-| Accuracy | Trouser       | 87.6%            | 92%                    | 94%                           |
+| Accuracy | 91.3%         | 87.6%            | 92%                    | 94%                           |
 
 ### References
 * https://github.com/zalandoresearch/fashion-mnist
