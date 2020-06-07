@@ -179,14 +179,14 @@ Results of training are contained in table below
 |   Loss   |      0.64     |   0.23  |   0.27  |   0.26  |   0.28  |
 | Accuracy |      91%      |   92.1% |   90.2% |   90.4% |   89.4% |
 
-Best model
+
 
 |          |  Best model   |
 | -------- | ------------- |
 |   Loss   |     0.23      |
 | Accuracy |     92.1%     |
 
-Evaluating model on test data:
+Evaluating best model on test data:
 ```
 Final scores:
 Loss: 0.24972761380672454
