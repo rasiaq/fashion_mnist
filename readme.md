@@ -119,7 +119,7 @@ def model_training(train_images, train_labels, iterations):
     model = get_model()
     training_hist = [model.fit(x_train, y_train, validation_data=(x_val, y_val),
                                epochs=number_of_epochs, verbose=0)]
-                               
+
     score = model.evaluate(x_val, y_val, verbose=1)
     histories.append((score[0], score[1] * 100))
 
@@ -151,7 +151,8 @@ def model_training(train_images, train_labels, iterations):
 ```
 
 NOTE: Some code fragments of this method have been intentionally omitted for
-readability
+readability.
+
 Training of one model takes 50 epochs. I've decided to run four iterations, each
 time splitting training data differently, to get four models and pick the one
 that gives the lowest loss value. After finished training, the best model is
