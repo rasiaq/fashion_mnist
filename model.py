@@ -16,6 +16,7 @@ img_height = 28
 # CNN params
 pool_size = 2
 number_of_epochs = 50
+number_of_iterations = 4
 random_state = 101  # for data splitting
 
 
@@ -158,7 +159,7 @@ def main():
     train_img, train_labels = normalize_data(train_img, train_labels)
 
     # Running training
-    _, training_history = model_training(train_img, train_labels, 4)
+    _, training_history = model_training(train_img, train_labels, number_of_iterations)
 
     # Printing plots
     print_plots(training_history)
