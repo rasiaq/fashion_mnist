@@ -112,8 +112,7 @@ now it is respectively 32 and 64.
 
 ```python
 def model_training(train_images, train_labels, iterations):
-    x_train, x_val, y_train, y_val = train_test_split(train_images, train_labels,
-                                                      test_size=0.2, random_state=random_state)
+    x_train, x_val, y_train, y_val = train_test_split(train_images, train_labels, test_size=0.2, random_state=random_state)
 
     histories = []
     model = get_model()
@@ -128,12 +127,11 @@ def model_training(train_images, train_labels, iterations):
 
     for i in range(1, iterations):
         x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.2, random_state=random_state)
+                                                
         model = get_model()
-        training_hist.append(model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs=10, verbose=0))
+        training_hist.append(model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs=10, verbose=0))               
         score = model.evaluate(x_val, y_val, verbose=0)
         histories.append((score[0], score[1] * 100))
-
-        print(f'Loss: {score[0]}. Accuracy: {score[1] * 100} %')
 
         if score[0] < lowest_loss:
             best_model = model
@@ -143,17 +141,11 @@ def model_training(train_images, train_labels, iterations):
 
     best_model.save('best_model.h5')
 
-    print('All training results')
-    for i in range(len(histories)):
-        val_loss = histories[i][0]
-        val_acc = histories[i][1]
-        print(f'Model {i}. Loss: {val_loss}. Accuracy: {val_acc}')
-
-    print(f'Lowest loss: {lowest_loss}. Accuracy: {best_acc} %')
-
     return best_model, training_hist[index]
 ```
 
+NOTE: Some code fragments of this method have been intentionally omitted for
+readability
 Training of one model takes 50 epochs. I've decided to run four iterations, each
 time splitting training data differently, to get four models and pick the one
 that gives the lowest loss value. After finished training, the best model is
