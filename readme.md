@@ -107,6 +107,10 @@ training accuracy stoped growing and validation loss was increasing drastically
 To avoid overfitting I've decided to put some dropout layers - one after each
 convolutional layer.
 
+#### Final model architecture
+
+![model_architecture](https://ibb.co/yPcCyNn)
+
 ### Training
 
 ```python
