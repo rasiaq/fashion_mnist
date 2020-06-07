@@ -19,21 +19,21 @@ number_of_epochs = 50
 random_state = 101  # for data splitting
 
 
-def normalize_data(train_img, train_labels):
+def normalize_data(images, labels):
     """
-    :param train_img: train images
-    :param train_labels: train labels
+    :param images: train images
+    :param labels: train labels
     :return: scaled between 0-1 and reshaped train and validation images. Train labels converted to binary class
             vector.
     """
 
-    train_img = np.array(train_img, dtype='float32')
-    train_img = train_img.reshape((train_img.shape[0], img_width, img_height, 1))
-    train_img /= 255
+    images = np.array(images, dtype='float32')
+    images = images.reshape((images.shape[0], img_width, img_height, 1))
+    images /= 255
 
-    train_labels = to_categorical(train_labels)
+    labels = to_categorical(labels)
 
-    return train_img, train_labels
+    return images, labels
 
 
 def get_model():
@@ -61,6 +61,12 @@ def get_model():
 
 
 def model_training(train_images, train_labels, iterations):
+    """
+    :param train_images: preprocessed train images
+    :param train_labels: preprocessed train labels
+    :param iterations: number of iterations
+    :return: tuple containing best model and training history
+    """
     x_train, x_val, y_train, y_val = train_test_split(train_images, train_labels,
                                                       test_size=0.2, random_state=random_state)
 
@@ -100,11 +106,19 @@ def model_training(train_images, train_labels, iterations):
 
     print(f'Lowest loss: {lowest_loss}. Accuracy: {best_acc} %')
 
-    training_acc = training_hist[index].history['accuracy']
-    val_acc = training_hist[index].history['val_accuracy']
+    return best_model, training_hist[index]
 
-    training_loss = training_hist[index].history['loss']
-    val_loss = training_hist[index].history['val_loss']
+
+def print_plots(training_hist):
+    """
+    :param training_hist: training history of best model
+    :return:
+    """
+    training_acc = training_hist.history['accuracy']
+    val_acc = training_hist.history['val_accuracy']
+
+    training_loss = training_hist.history['loss']
+    val_loss = training_hist.history['val_loss']
 
     fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(20, 6))
 
@@ -123,6 +137,13 @@ def model_training(train_images, train_labels, iterations):
 
 
 def load_best_model(x_test, y_test, path='best_model.h5'):
+    """
+    :param x_test: preprocessed test images
+    :param y_test: preprocessed test labels
+    :param path: path to the best model
+    :return:
+    """
+
     model = load_model(path)
     score = model.evaluate(x_test, y_test, verbose=1)
     print(f'Final scores: \nLoss: {score[0]}\n Accuracy: {score[1] * 100}')
@@ -132,8 +153,15 @@ def main():
     train_img, train_labels = mnist_reader.load_mnist('data/fashion', kind='train')
     test_img, test_labels = mnist_reader.load_mnist('data/fashion', kind='t10k')
 
+    # Normalizing data
+    test_img, test_labels = normalize_data(test_img, test_labels)
     train_img, train_labels = normalize_data(train_img, train_labels)
-    model_training(train_img, train_labels, 4)
+
+    # Running training
+    _, training_history = model_training(train_img, train_labels, 4)
+
+    # Printing plots
+    print_plots(training_history)
 
     # Run final test
     load_best_model(test_img, test_labels)
