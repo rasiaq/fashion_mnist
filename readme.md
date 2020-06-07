@@ -111,34 +111,55 @@ now it is respectively 32 and 64.
 ### Training
 
 ```python
-def model_training(x_train, y_train, iterations):
-    x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.2, random_state=42)
+def model_training(train_images, train_labels, iterations):
+    x_train, x_val, y_train, y_val = train_test_split(train_images, train_labels,
+                                                      test_size=0.2, random_state=random_state)
+
+    histories = []
     model = get_model()
-    model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs=number_of_epochs, verbose=1)
+    training_hist = [model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs=number_of_epochs, verbose=0)]
     score = model.evaluate(x_val, y_val, verbose=1)
+    histories.append((score[0], score[1] * 100))
 
     best_model = model
+    index = 0
     lowest_loss = score[0]
-    best_acc = score[1]
+    best_acc = score[1] * 100
 
     for i in range(1, iterations):
-        x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.2, random_state=42)
+        x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.2, random_state=random_state)
         model = get_model()
-        model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs=10, verbose=0)
+        training_hist.append(model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs=10, verbose=0))
         score = model.evaluate(x_val, y_val, verbose=0)
+        histories.append((score[0], score[1] * 100))
+
+        print(f'Loss: {score[0]}. Accuracy: {score[1] * 100} %')
 
         if score[0] < lowest_loss:
-            lowest_loss = score[0]
-            best_acc = score[1]
             best_model = model
+            index = i
+            lowest_loss = score[0]
+            best_acc = score[1] * 100
 
     best_model.save('best_model.h5')
+
+    print('All training results')
+    for i in range(len(histories)):
+        val_loss = histories[i][0]
+        val_acc = histories[i][1]
+        print(f'Model {i}. Loss: {val_loss}. Accuracy: {val_acc}')
+
+    print(f'Lowest loss: {lowest_loss}. Accuracy: {best_acc} %')
+
+    return best_model, training_hist[index]
 ```
 
 Training of one model takes 50 epochs. I've decided to run four iterations, each
 time splitting training data differently, to get four models and pick the one
 that gives the lowest loss value. After finished training, the best model is
-saved to a file with format `.h5`.
+saved to a file with format `.h5`, and values are displayed in console. Training
+method returns the best computed model and history of its training, which can
+be later visualized on plots.
 
 ## Results
 
@@ -156,18 +177,19 @@ Results of training are contained in table below
 
 |          | First version | Model 1 | Model 2 | Model 3 | Model 4 |
 | -------- | ------------- | ------- | ------- | ------- | ------- |
-|   Loss   | 0.64          | 0.23    | 0.27    | 0.26    | 0.28    |
-| Accuracy | 91%           | 92.1%   | 90.2%   | 90.4%   | 89.4%   |
+|   Loss   |      0.64     |   0.23  |   0.27  |   0.26  |   0.28  |
+| Accuracy |      91%      |   92.1% |   90.2% |   90.4% |   89.4% |
 
 Best model
 
 |          |  Best model   |
 | -------- | ------------- |
-|   Loss   | 0.23          |
-| Accuracy | 92.1%         |
+|   Loss   |     0.23      |
+| Accuracy |     92.1%     |
 
 Evaluating model on test data:
-```Final scores:
+```
+Final scores:
 Loss: 0.24972761380672454
 Accuracy: 91.32999777793884
 ```
@@ -176,7 +198,7 @@ Compared to other, similar models
 
 |          |  Best model   | 2 Conv + pooling | 2 Conv + preprocessing | 2 Conv + 2 FC + preprocessing |   
 | -------- | ------------- | ---------------- | ---------------------- | ----------------------------- |
-| Accuracy | 91.3%         | 87.6%            | 92%                    | 94%                           |
+| Accuracy |     91.3%     |      87.6%       |           92%          |               94%             |
 
 ### References
 * https://github.com/zalandoresearch/fashion-mnist
