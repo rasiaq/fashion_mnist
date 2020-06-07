@@ -167,9 +167,10 @@ Best model
 | Accuracy | 92.1%         |
 
 Evaluating model on test data:
-`Final scores:
+```Final scores:
 Loss: 0.24972761380672454
-Accuracy: 91.32999777793884`
+Accuracy: 91.32999777793884
+```
 
 Compared to other, similar models
 
