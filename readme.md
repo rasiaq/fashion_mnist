@@ -112,11 +112,13 @@ now it is respectively 32 and 64.
 
 ```python
 def model_training(train_images, train_labels, iterations):
-    x_train, x_val, y_train, y_val = train_test_split(train_images, train_labels, test_size=0.2, random_state=random_state)
+    x_train, x_val, y_train, y_val = train_test_split(train_images, train_labels,
+                                                      test_size=0.2, random_state=random_state)
 
     histories = []
     model = get_model()
-    training_hist = [model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs=number_of_epochs, verbose=0)]
+    training_hist = [model.fit(x_train, y_train, validation_data=(x_val, y_val),
+                               epochs=number_of_epochs, verbose=0)]
     score = model.evaluate(x_val, y_val, verbose=1)
     histories.append((score[0], score[1] * 100))
 
@@ -126,10 +128,12 @@ def model_training(train_images, train_labels, iterations):
     best_acc = score[1] * 100
 
     for i in range(1, iterations):
-        x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.2, random_state=random_state)
-                                                
+        x_train, x_val, y_train, y_val = train_test_split(x_train, y_train,
+                                                          test_size=0.2, random_state=random_state)
+
         model = get_model()
-        training_hist.append(model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs=10, verbose=0))               
+        training_hist.append(model.fit(x_train, y_train, validation_data=(x_val, y_val),
+                                       epochs=10, verbose=0))               
         score = model.evaluate(x_val, y_val, verbose=0)
         histories.append((score[0], score[1] * 100))
 
