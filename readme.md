@@ -105,11 +105,8 @@ Unfortunately, the performance of the model wasn't the best - after 5-7th epoch
 training accuracy stoped growing and validation loss was increasing drastically
 (The plots are placed in results section).
 To avoid overfitting I've decided to put some dropout layers - one after each
-convolutional layer.
-
-#### Final model architecture
-
-![model_architecture](https://ibb.co/yPcCyNn)
+convolutional layer. I also slightly changed number of filters in layers -
+now it is respectively 32 and 64.
 
 ### Training
 
@@ -141,4 +138,84 @@ def model_training(x_train, y_train, iterations):
 Training of one model takes 50 epochs. I've decided to run four iterations, each
 time splitting training data differently, to get four models and pick the one
 that gives the lowest loss value. After finished training, the best model is
-saved to a file with format `.h5`
+saved to a file with format `.h5`.
+
+## Results
+
+As I mentioned earlier, first version of CNN didn't perform very well. Here is
+the plot, produced by training history:
+
+![plot1](https://ibb.co/wdqs83S =250x250)
+
+After adding some dropout layers and changing number of filters, I was able to
+partly remove overfitting and improve overall performance
+
+
+Results of training are contained in table below
+
+|          | First version | Model 1 | Model 2 | Model 3 | Model 4 |
+| -------- | ------------- | ------- | ------- | ------- | ------- |
+|   Loss   | 0.64          |         |         |         |         |
+| Accuracy | 91%           |         |         |         |         |
+
+Best model
+
+|          |  Best model   |
+| -------- | ------------- |
+|   Loss   | T-shirt/top   |
+| Accuracy | Trouser       |
+
+Compared to other, similar models
+
+|          |  Best model   | 2 Conv + pooling | 2 Conv + preprocessing | 2 Conv + 2 FC + preprocessing |   
+| -------- | ------------- | ---------------- | ---------------------- | ----------------------------- |
+| Accuracy | Trouser       | 87.6%            | 92%                    | 94%                           |
+
+### References
+* https://github.com/zalandoresearch/fashion-mnist
+* https://www.kaggle.com/gpreda/cnn-with-tensorflow-keras-for-fashion-mnist
+* https://machinelearningmastery.com/save-load-keras-deep-learning-models/
+* https://keras.io/examples/mnist_cnn/
+* https://medium.com/@amarbudhiraja/https-medium-com-amarbudhiraja-learning-less-to-learn-better-dropout-in-deep-machine-learning-74334da4bfc5
+* https://towardsdatascience.com/convolutional-neural-network-17fb77e76c05
+* https://machinelearningmastery.com/adam-optimization-algorithm-for-deep-learning/
+* https://github.com/abelusha/MNIST-Fashion-CNN
+* https://towardsdatascience.com/building-a-convolutional-neural-network-cnn-in-keras-329fbbadc5f5
+* https://www.youtube.com/watch?v=bNb2fEVKeEo
+* https://machinelearningmastery.com/display-deep-learning-model-training-history-in-keras/
+
+## Usage
+
+### Download
+
+You can simply download the .zip with all the files.
+The repository includes:
+
+1. [mnist_reader.py](https://github.com/zalandoresearch/fashion-mnist/blob/master/utils/mnist_reader.py)
+    which is a file to load the data, placed in `data/fashion` directory
+2. All the train and test labels in directory `data/fashion`
+3. Best trained model in file named `best_model.h5`
+
+### Libraries
+
+To run a program you will need the following libraries:
+
+* Keras
+* Numpy
+* Sklearn
+
+### Running
+
+The repository contains best trained model saved in `best_model.h5` file.
+There is a special method called `load_best_model`
+
+```python
+def load_best_model(x_test, y_test, path='best_model.h5'):
+    model = load_model(path)
+    score = model.evaluate(x_test, y_test, verbose=1)
+    print(f'Final scores: \nLoss: {score[0]}\n Accuracy: {score[1] * 100}')
+```
+
+To get the score from `Results` section you just need to run this method.
+It loads the model from file, evaluates it on test labels and test images
+and computes the final result.
